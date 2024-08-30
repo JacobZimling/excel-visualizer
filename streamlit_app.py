@@ -7,7 +7,12 @@ title = "Excel Visualizer"
 st.set_page_config(
     page_title=title,
     page_icon=":bar_chart:",
-    layout="wide"
+    layout="wide",
+    primaryColor = "#E694FF",
+    backgroundColor = "#00172B",
+    secondaryBackgroundColor = "#0083B8",
+    textColor = "#FFF",
+    font = "sans serif"
 )
 
 st.header(title)
