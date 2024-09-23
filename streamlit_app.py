@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import openpyxl
 import plotly.express as px
+from openpyxl import Workbook
+import csv
 
 title = "Excel Visualizer"
 st.set_page_config(
@@ -23,10 +25,24 @@ data_file = st.sidebar.file_uploader(
     accept_multiple_files=False, 
     label_visibility="visible"
 )
+
 #print(data_file.name)
 if data_file:
-   st.write("Filename: ", data_file.name)
+    st.write("Filename: ", data_file.name)
+    if data_file.name.lower().endswith(".csv"):
+        st.write("Process CSV file")
 exit()
+
+from openpyxl import Workbook
+import csv
+
+wb = Workbook()
+ws = wb.active
+with open('test.csv', 'r') as f:
+    for row in csv.reader(f):
+        ws.append(row)
+wb.save('name.xlsx')
+
 
 if data_file:
     st.sidebar.markdown("""---""")
