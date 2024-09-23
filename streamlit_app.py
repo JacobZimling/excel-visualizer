@@ -31,22 +31,19 @@ if data_file:
     st.write("Filename: ", data_file.name)
     if data_file.name.lower().endswith(".csv"):
         st.write("Process CSV file")
-exit()
+        wb = Workbook()
+        ws = wb.active
+        with open(data_file.name, 'r') as f:
+            for row in csv.reader(f):
+                ws.append(row)
+    else:
+        wb = openpyxl.load_workbook(data_file)
+        
+#exit()
 
-from openpyxl import Workbook
-import csv
-
-wb = Workbook()
-ws = wb.active
-with open('test.csv', 'r') as f:
-    for row in csv.reader(f):
-        ws.append(row)
-wb.save('name.xlsx')
-
-
-if data_file:
+#if data_file:
     st.sidebar.markdown("""---""")
-    wb = openpyxl.load_workbook(data_file)
+#    wb = openpyxl.load_workbook(data_file)
 
     ## Select sheet
     sheet_selector = st.sidebar.selectbox(
