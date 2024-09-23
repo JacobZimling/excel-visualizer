@@ -29,6 +29,7 @@ data_file = st.sidebar.file_uploader(
 #print(data_file.name)
 if data_file:
     st.write("Filename: ", data_file.name)
+    st.write("Filename: ", type(data_file))
     if data_file.name.lower().endswith(".csv"):
         st.write("Process CSV file")
         wb = Workbook()
