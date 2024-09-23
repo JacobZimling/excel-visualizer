@@ -23,7 +23,9 @@ data_file = st.sidebar.file_uploader(
     accept_multiple_files=False, 
     label_visibility="visible"
 )
-print(data_file.name)
+#print(data_file.name)
+if data_file:
+   st.write("Filename: ", data_file.name)
 exit()
 
 if data_file:
