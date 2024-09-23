@@ -21,15 +21,16 @@ st.header(title)
 
 data_file = st.sidebar.file_uploader(
     "Select Excel file to visualize", 
-    type=["xlsx", "xlsm", "xltx", "xltm","csv"], 
+#    type=["xlsx", "xlsm", "xltx", "xltm","csv"], 
+    type=["xlsx", "xlsm", "xltx", "xltm"s], 
     accept_multiple_files=False, 
     label_visibility="visible"
 )
 
 #print(data_file.name)
 if data_file:
-    st.write("Filename: ", data_file.name)
-    st.write("Filename: ", type(data_file))
+#    st.write("Filename: ", data_file.name)
+#    st.write("Filename: ", type(data_file))
     if data_file.name.lower().endswith(".csv"):
         st.write("Process CSV file")
         wb = Workbook()
