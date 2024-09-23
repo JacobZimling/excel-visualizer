@@ -33,7 +33,7 @@ if data_file:
         st.write("Process CSV file")
         wb = Workbook()
         ws = wb.active
-        with open(data_file.name, 'r') as f:
+        with open(data_file, 'r') as f:
             for row in csv.reader(f):
                 ws.append(row)
     else:
