@@ -5,6 +5,21 @@ import plotly.express as px
 from openpyxl import Workbook
 import csv
 
+# Function to convert CSV to OpenPyXL workbook
+def csv_to_workbook(csv_file):
+    # Read CSV into pandas DataFrame
+    df = pd.read_csv(csv_file)
+    
+    # Create an OpenPyXL workbook
+    wb = Workbook()
+    ws = wb.active
+    
+    # Write DataFrame to workbook
+    for r_idx, row in df.iterrows():
+        ws.append(list(row))
+
+    return wb
+
 title = "Excel Visualizer"
 st.set_page_config(
     page_title=title,
@@ -33,11 +48,12 @@ if data_file:
 #    st.write("Filename: ", type(data_file))
     if data_file.name.lower().endswith(".csv"):
         st.write("Process CSV file")
-        wb = Workbook()
-        ws = wb.active
-        with open(data_file, 'r') as f:
-            for row in csv.reader(f):
-                ws.append(row)
+#        wb = Workbook()
+#        ws = wb.active
+#        with open(data_file, 'r') as f:
+#            for row in csv.reader(f):
+#                ws.append(row)
+        wb = csv_to_workbook(data_file)
     else:
         wb = openpyxl.load_workbook(data_file)
         
