@@ -72,6 +72,7 @@ if data_file:
     )
     if sheet_selector:
         st.sidebar.markdown("""---""")
+        st.write(type(data_file))
         df = pd.read_excel(data_file,sheet_selector,engine='openpyxl')
         x_axis_selector = st.sidebar.selectbox("Select time column",
             df.columns,
