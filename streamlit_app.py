@@ -135,12 +135,10 @@ if data_file:
     ## Process CSV file
     if data_file.name.lower().endswith(".csv"):
         ## Read CSV file as Pandas dataframe
-#        wb = csv_to_workbook(data_file)
-        df = pd.read_csv(csv_file)
+        df = pd.read_csv(data_file)
         
         ## Display Column selector using dataframe columns for Time column selection
         st.sidebar.markdown("""---""")
-        
         x_axis_selector = time_column_selector(df)
 
         ## Display Column selector using dataframe columns for Measure column selection. Exclude column chosen for Time
