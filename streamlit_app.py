@@ -137,7 +137,7 @@ def measure_column_selector(df, exclude_column=''):
     )
     return y_axis_selector
 
-def display_line_chart(df, time_column=, measures=):
+def display_line_chart(df, time_column='', measures=''):
     fig = px.line(
         df, 
         x=time_column, 
@@ -159,6 +159,8 @@ def display_line_chart(df, time_column=, measures=):
 
 ## File uploaded
 if data_file:
+    ## Set Delimiter
+    
     ## Process CSV file
     if data_file.name.lower().endswith(".csv"):
         ## Read CSV file as Pandas dataframe
