@@ -165,7 +165,7 @@ if data_file:
     if data_file.name.lower().endswith(".csv"):
         ## Read CSV file as Pandas dataframe
         df = pd.read_csv(data_file,sep=';')
-        st.write(df)
+#        st.write(df)
         
         ## Display Column selector using dataframe columns for Time column selection
         st.sidebar.markdown("""---""")
@@ -176,6 +176,7 @@ if data_file:
             y_axis_selector = measure_column_selector(df, exclude_column=x_axis_selector)
 
             ## Configure Line chart using dataframe and selected columns
+            ## Display Line chart
             if y_axis_selector:
                 display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector)
         
@@ -185,12 +186,27 @@ if data_file:
         wb = openpyxl.load_workbook(data_file)
 
         ## Display dropdown to select sheet name
+        st.sidebar.markdown("""---""")
+        sheet_selector = st.sidebar.selectbox(
+            "Select sheet to visualize",
+            wb.sheetnames,
+            index=None,
+            placeholder="Select sheet..."
+        )
 
         ## Read Excel sheet as Pandas dataframe
+        if sheet_selector:
+            st.sidebar.markdown("""---""")
+            df = pd.read_excel(data_file,sheet_selector)
 
-        ## Display Column selector using dataframe columns for Time column selection
+            ## Display Column selector using dataframe columns for Time column selection
+            x_axis_selector = time_column_selector(df)
 
-        ## Display Column selector using dataframe columns for Measure column selection. Exclude column chosen for Time
+            ## Display Column selector using dataframe columns for Measure column selection. Exclude column chosen for Time
+            if x_axis_selector:
+                y_axis_selector = measure_column_selector(df, exclude_column=x_axis_selector)
 
-        ## Configure Line chart using dataframe and selected columns
-        ## Display Line chart
+                ## Configure Line chart using dataframe and selected columns
+                ## Display Line chart
+                if y_axis_selector:
+                    display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector)
