@@ -20,7 +20,7 @@ def csv_to_workbook(csv_file):
 
     return wb
 
-def do_no_run:
+def do_no_run():
     title = "Excel Visualizer"
     st.set_page_config(
         page_title=title,
