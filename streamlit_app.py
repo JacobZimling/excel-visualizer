@@ -30,8 +30,7 @@ data_file = st.sidebar.file_uploader(
 def csv_delimiter_selector(csv_delimiters):
     csv_delimiter = st.sidebar.radio("Select data delimiter",
         csv_delimiters,
-        index=None,
-        placeholder="Select data delimiter..."
+        index=None
     )
     return csv_delimiter
 
