@@ -155,7 +155,7 @@ def display_line_chart(df, time_column='', measures=''):
     
     ## Display Line chart
     st.plotly_chart(fig, use_container_width=True)
-
+    return
 
 ## File uploaded
 if data_file:
