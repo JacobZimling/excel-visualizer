@@ -133,7 +133,7 @@ def time_column_selector(df):
 def measure_column_selector(df, exclude_column=''):
     y_axis_selector = st.sidebar.multiselect(
         "Select measures to display",
-        list(filter(lambda x : x != exclude_columns, df.columns))
+        list(filter(lambda x : x != exclude_column, df.columns))
     )
     return y_axis_selector
 
