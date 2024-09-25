@@ -72,27 +72,29 @@ def display_line_chart(df, time_column='', measures=''):
 
 ## File uploaded
 if data_file:
-    ## Set Delimiter
-    csv_delimiter = csv_delimiter_selector(csv_delimiters)
     
     ## Process CSV file
     if data_file.name.lower().endswith(".csv"):
-        ## Read CSV file as Pandas dataframe
-        df = pd.read_csv(data_file,sep=csv_delimiter)
-#        st.write(df)
-        
-        ## Display Column selector using dataframe columns for Time column selection
-        st.sidebar.markdown("""---""")
-        x_axis_selector = time_column_selector(df)
+        ## Set Delimiter
+        csv_delimiter = csv_delimiter_selector(csv_delimiters)
 
-        ## Display Column selector using dataframe columns for Measure column selection. Exclude column chosen for Time
-        if x_axis_selector:
-            y_axis_selector = measure_column_selector(df, exclude_column=x_axis_selector)
-
-            ## Configure Line chart using dataframe and selected columns
-            ## Display Line chart
-            if y_axis_selector:
-                display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector)
+        if csv_delimiter:
+            ## Read CSV file as Pandas dataframe
+            df = pd.read_csv(data_file,sep=csv_delimiter)
+    #        st.write(df)
+            
+            ## Display Column selector using dataframe columns for Time column selection
+            st.sidebar.markdown("""---""")
+            x_axis_selector = time_column_selector(df)
+    
+            ## Display Column selector using dataframe columns for Measure column selection. Exclude column chosen for Time
+            if x_axis_selector:
+                y_axis_selector = measure_column_selector(df, exclude_column=x_axis_selector)
+    
+                ## Configure Line chart using dataframe and selected columns
+                ## Display Line chart
+                if y_axis_selector:
+                    display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector)
         
     ## Process Excel file
     else:
