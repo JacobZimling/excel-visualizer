@@ -121,3 +121,45 @@ data_file = st.sidebar.file_uploader(
     accept_multiple_files=False, 
     label_visibility="visible"
 )
+
+def time_column_selector(df):
+    x_axis_selector = st.sidebar.selectbox("Select time column",
+        df.columns,
+        index=None,
+        placeholder="Select time column..."
+    )
+    return x_axis_selector
+
+## File uploaded
+if data_file:
+    ## Process CSV file
+    if data_file.name.lower().endswith(".csv"):
+        ## Read CSV file as Pandas dataframe
+#        wb = csv_to_workbook(data_file)
+        df = pd.read_csv(csv_file)
+        
+        ## Display Column selector using dataframe columns for Time column selection
+        st.sidebar.markdown("""---""")
+        
+        x_axis_selector = time_column_selector(df)
+
+        ## Display Column selector using dataframe columns for Measure column selection. Exclude column chosen for Time
+
+        ## Configure Line chart using dataframe and selected columns
+        ## Display Line chart
+        
+    ## Process Excel file
+    else:
+        ## Read Excel file as openpyxl workbook object
+        wb = openpyxl.load_workbook(data_file)
+
+        ## Display dropdown to select sheet name
+
+        ## Read Excel sheet as Pandas dataframe
+
+        ## Display Column selector using dataframe columns for Time column selection
+
+        ## Display Column selector using dataframe columns for Measure column selection. Exclude column chosen for Time
+
+        ## Configure Line chart using dataframe and selected columns
+        ## Display Line chart
