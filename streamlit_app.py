@@ -130,6 +130,33 @@ def time_column_selector(df):
     )
     return x_axis_selector
 
+def measure_column_selector(df, exclude_column=''):
+    y_axis_selector = st.sidebar.multiselect(
+        "Select measures to display",
+        list(filter(lambda x : x != exclude_columns, df.columns))
+    )
+    return y_axis_selector
+
+def display_line_chart(df, time_column=, measures=):
+    fig = px.line(
+        df, 
+        x=time_column, 
+        y=measures
+    )
+    fig.update_layout(
+        yaxis=dict(rangemode='tozero',fixedrange=True),  # Fix the Y-axis starting at 0 and prevent zooming
+        showlegend=True,
+        xaxis=dict(fixedrange=False),  # Allow zooming on X-axis
+        plot_bgcolor="rgba(0,0,0,0)",
+        xaxis_title=None,
+        yaxis_title=None,
+        legend_title=None
+    )
+    
+    ## Display Line chart
+    st.plotly_chart(fig, use_container_width=True)
+
+
 ## File uploaded
 if data_file:
     ## Process CSV file
@@ -143,9 +170,12 @@ if data_file:
         x_axis_selector = time_column_selector(df)
 
         ## Display Column selector using dataframe columns for Measure column selection. Exclude column chosen for Time
+        if x_axis_selector:
+            y_axis_selector = measure_column_selector(df, exclude_column=x_axis_selector)
 
-        ## Configure Line chart using dataframe and selected columns
-        ## Display Line chart
+            ## Configure Line chart using dataframe and selected columns
+            if y_axis_selector:
+                display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector)
         
     ## Process Excel file
     else:
