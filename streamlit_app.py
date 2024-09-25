@@ -136,6 +136,7 @@ if data_file:
     if data_file.name.lower().endswith(".csv"):
         ## Read CSV file as Pandas dataframe
         df = pd.read_csv(data_file)
+        st.write(df)
         
         ## Display Column selector using dataframe columns for Time column selection
         st.sidebar.markdown("""---""")
