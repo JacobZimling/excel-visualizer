@@ -27,7 +27,7 @@ data_file = st.sidebar.file_uploader(
     label_visibility="visible"
 )
 
-def csv_delimitor_selector(csv_delimiters):
+def csv_delimiter_selector(csv_delimiters):
     csv_delimiter = st.sidebar.selectbox("Select data delimiter",
         csv_delimiters,
         index=None,
@@ -73,11 +73,12 @@ def display_line_chart(df, time_column='', measures=''):
 ## File uploaded
 if data_file:
     ## Set Delimiter
+    csv_delimiter = csv_delimiter_selector(csv_delimiters)
     
     ## Process CSV file
     if data_file.name.lower().endswith(".csv"):
         ## Read CSV file as Pandas dataframe
-        df = pd.read_csv(data_file,sep=';')
+        df = pd.read_csv(data_file,sep=csv_delimiter)
 #        st.write(df)
         
         ## Display Column selector using dataframe columns for Time column selection
