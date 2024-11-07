@@ -1,12 +1,20 @@
 import streamlit as st
 import pandas as pd
 import openpyxl
-import plotly.express as px
-from openpyxl import Workbook
-import csv
+import plotly.express as pltx
+from dateutil import parser
+from datetime import datetime
 
+### App configuration
+# Title for the app
 title = "Excel Visualizer"
+
+# List of delimiters so select from when importing csv files
 csv_delimiters = (";",",")
+
+# Control if "wave" duration will be shown on the graph
+show_duration = True
+#show_duration = False
 
 st.set_page_config(
     page_title=title,
@@ -27,6 +35,7 @@ data_file = st.sidebar.file_uploader(
     label_visibility="visible"
 )
 
+# Diaplay delimiter selector
 def csv_delimiter_selector(csv_delimiters):
     csv_delimiter = st.sidebar.radio("Select data delimiter",
         csv_delimiters,
@@ -34,6 +43,7 @@ def csv_delimiter_selector(csv_delimiters):
     )
     return csv_delimiter
 
+# Display time column selector
 def time_column_selector(df):
     x_axis_selector = st.sidebar.selectbox("Select time column",
         df.columns,
@@ -42,6 +52,7 @@ def time_column_selector(df):
     )
     return x_axis_selector
 
+# Display measure columns selector
 def measure_column_selector(df, exclude_column=''):
     y_axis_selector = st.sidebar.multiselect(
         "Select measures to display",
@@ -49,8 +60,11 @@ def measure_column_selector(df, exclude_column=''):
     )
     return y_axis_selector
 
-def display_line_chart(df, time_column='', measures=''):
-    fig = px.line(
+# Display line chart
+def display_line_chart(df, time_column='', measures='', show_duration=False):
+    df.drop_duplicates(inplace=True)
+
+    fig = pltx.line(
         df, 
         x=time_column, 
         y=measures
@@ -64,7 +78,57 @@ def display_line_chart(df, time_column='', measures=''):
         yaxis_title=None,
         legend_title=None
     )
-    
+
+    # Annotate "wave" duration to the graph
+    if show_duration:
+        # Identify waves
+        wave_start = ''
+        wave_end = ''
+
+        isInWave = False
+        waves = []
+
+        for index, row in df.iterrows():
+
+
+            if not isInWave:
+                if int(row[measures[0]])>0:
+                    isInWave = True
+                    wave_start = row[time_column]
+
+            if isInWave:
+                if int(row[measures[0]])==0:
+                    isInWave = False
+                    wave_end = row[time_column]
+                    waves.append({'start': wave_start, 'end': wave_end})
+
+        for wave in waves:
+            # Caculate wave duration
+            wave_duration = parser.parse(wave['end']) - parser.parse(wave['start'])
+
+            # Caclulate midpoint for duration text annotation
+            text_x = parser.parse(wave['start']) + wave_duration / 2
+
+            # Annotate wave duration indicator
+            fig.add_shape(
+                type="rect",
+                x0=wave['start'], y0=-10, x1=wave['end'], y1=-20,  # Define the coordinates of the rectangle's corners
+                line=dict(
+                    color="rgb(0,131,184)",
+                    width=2,
+                ),
+                fillcolor="rgb(0,131,184)",  # Set the color to fill the rectangle
+            )
+            # Annotate text for wave duration indicator
+            text = f"{wave_duration.total_seconds()} sec"
+            fig.add_annotation(
+        #        x='2024-09-20T09:18:16.678', y=-15,  # Text annotation position
+                x=text_x, y=-15,  # Text annotation position
+                xref="x", yref="y",  # Coordinate reference system
+                text=text,  # Text content
+                showarrow=False  # Hide arrow
+            )
+
     ## Display Line chart
     st.plotly_chart(fig, use_container_width=True)
     return
@@ -80,8 +144,7 @@ if data_file:
         if csv_delimiter:
             ## Read CSV file as Pandas dataframe
             df = pd.read_csv(data_file,sep=csv_delimiter)
-    #        st.write(df)
-            
+
             ## Display Column selector using dataframe columns for Time column selection
             st.sidebar.markdown("""---""")
             x_axis_selector = time_column_selector(df)
@@ -93,7 +156,7 @@ if data_file:
                 ## Configure Line chart using dataframe and selected columns
                 ## Display Line chart
                 if y_axis_selector:
-                    display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector)
+                    display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector, show_duration=show_duration)
         
     ## Process Excel file
     else:
@@ -124,4 +187,44 @@ if data_file:
                 ## Configure Line chart using dataframe and selected columns
                 ## Display Line chart
                 if y_axis_selector:
-                    display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector)
+                    display_line_chart(df, time_column=x_axis_selector, measures=y_axis_selector, show_duration=show_duration)
+
+## Footer
+footer="""<style>
+a:link , a:visited{
+color: blue;
+background-color: transparent;
+text-decoration: underline;
+}
+
+a:hover,  a:active {
+color: red;
+background-color: transparent;
+text-decoration: underline;
+}
+
+.footer {
+position: fixed;
+left: 0;
+bottom: 0;
+width: 100%;
+background-color: white;
+color: black;
+text-align: center;
+}
+.footer p {
+    margin-bottom: 0px;
+}
+
+</style>
+<div class="footer">
+<p>
+    <b>Made with</b>: Python 3.11 <a style='text-align: center;' href="https://www.python.org/" target="_blank"><img style="width: 18px; height: 18px; margin: 0em;" src="https://i.imgur.com/ml09ccU.png"></a>
+    and Streamlit <a style='text-align: center;' href="https://streamlit.io/" target="_blank"><img style="width: 24px; height: 25px; margin: 0em;" src="https://docs.streamlit.io/logo.svg"></a>
+    by Jacob Zimling. <b>Hosted by:</b> Streamlit Community Cloud <a style='text-align: center;' href="https://streamlit.io/cloud" target="_blank"><img style="width: 24px; height: 25px; margin: 0em;" src="https://docs.streamlit.io/logo.svg"></a>
+    
+</p>
+</div>
+"""
+
+st.markdown(footer,unsafe_allow_html=True)
